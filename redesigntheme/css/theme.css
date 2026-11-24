@@ -1,0 +1,804 @@
+/* RackTables Redesign Theme - core layer (CSS only).
+   Tokens, 52 px header, cards, tables, tag chips, forms, rack diagram.
+   Works without JS; js/enhance.js only adds optional conveniences.
+   Icons: Lucide (ISC), fonts: IBM Plex (OFL), both hosted in this plugin. */
+
+:root {
+  --rt-bg: #F5F6F8;
+  --rt-surface: #FFFFFF;
+  --rt-hover: #F1F5F9;
+  --rt-border: #DDE2E8;
+  --rt-border-strong: #CBD2DB;
+  --rt-row-line: #EDF0F3;
+  --rt-text: #182230;
+  --rt-text-2: #334155;
+  --rt-secondary: #475569;
+  --rt-muted: #64748B;
+  --rt-accent: #2563EB;
+  --rt-accent-hover: #1D4ED8;
+  --rt-accent-soft: #EFF6FF;
+  --rt-focus: #BFDBFE;
+  --rt-success: #15803D;
+  --rt-warning: #A16207;
+  --rt-error: #B91C1C;
+  --rt-info: #1D4ED8;
+  --rt-radius: 6px;
+  --rt-font: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --rt-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --rt-cell-y: 5px;
+
+  /* rack diagram, colors by object type (see plugin.php) */
+  --rt-k-network-bg: #DBEAFE;  --rt-k-network-bd: #93C5FD;  --rt-k-network-fg: #1E3A8A;
+  --rt-k-server-bg: #DCFCE7;   --rt-k-server-bd: #86EFAC;   --rt-k-server-fg: #14532D;
+  --rt-k-optic-bg: #EDE9FE;    --rt-k-optic-bd: #C4B5FD;    --rt-k-optic-fg: #4C1D95;
+  --rt-k-passive-bg: #F1F5F9;  --rt-k-passive-bd: #CBD5E1;  --rt-k-passive-fg: #334155;
+  --rt-k-firewall-bg: #FEF9C3; --rt-k-firewall-bd: #FACC15; --rt-k-firewall-fg: #713F12;
+  --rt-k-power-bg: #FFEDD5;    --rt-k-power-bd: #FDBA74;    --rt-k-power-fg: #7C2D12;
+  --rt-k-other-bg: #F1F5F9;    --rt-k-other-bd: #94A3B8;    --rt-k-other-fg: #334155;
+}
+
+/* ------------------------------------------------------------------ base */
+html, body { background: var(--rt-bg); }
+body {
+  margin: 0;
+  font-family: var(--rt-font);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--rt-text);
+  -webkit-font-smoothing: antialiased;
+}
+body, table, td, th, input, select, textarea, button, a,
+.mainheader a, .menubar a, .rack a, .rackspace a, .mainmenu a { font-family: var(--rt-font); }
+a, a:link, a:visited { color: var(--rt-accent); text-decoration: none; }
+a:hover { color: var(--rt-accent-hover); text-decoration: underline; }
+a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible {
+  outline: 2px solid var(--rt-accent);
+  outline-offset: 2px;
+}
+pre, code, tt, .commentblock pre { font-family: var(--rt-mono); font-size: 12.5px; }
+hr { border: 0; border-top: 1px solid var(--rt-border); }
+h1 { font-size: 22px; font-weight: 600; line-height: 1.2; margin: 6px 0 4px; color: var(--rt-text); }
+h2 { font-size: 14px; font-weight: 600; }
+.maintable { border: 0; margin: 0; width: 100%; background: var(--rt-bg); }
+
+/* ---------------------------------------------------------------- header */
+.mainheader {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 20px;
+  background: var(--rt-surface);
+  border-bottom: 1px solid var(--rt-border);
+  color: var(--rt-text);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.mainheader::before {
+  content: "RT";
+  flex: none;
+  width: 26px;
+  height: 26px;
+  margin-right: 2px;
+  border-radius: 5px;
+  background: var(--rt-text);
+  color: #fff;
+  font: 600 11px/26px var(--rt-mono);
+  text-align: center;
+}
+.mainheader a, .mainheader a:link, .mainheader a:visited { color: var(--rt-secondary); font-weight: 500; }
+.mainheader a:hover { color: var(--rt-accent); text-decoration: none; }
+/* RackTables version next to the name: small mono badge (enhance.js moves it to the footer) */
+.mainheader > a[href*="racktables.org"] {
+  font: 400 11px var(--rt-mono);
+  color: var(--rt-muted);
+  border: 1px solid var(--rt-border);
+  border-radius: 4px;
+  padding: 0 5px;
+}
+.mainheader div.greeting {
+  order: 99;
+  float: none !important;
+  margin-left: auto;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--rt-muted);
+}
+.mainheader div.greeting a { font-weight: 400; color: var(--rt-secondary); }
+ul.qlinks {
+  display: flex;
+  align-self: stretch;
+  gap: 4px;
+  margin: 0 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+ul.qlinks li { display: flex; margin: 0; padding: 0; }
+ul.qlinks li a, ul.qlinks li a:link, ul.qlinks li a:visited {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--rt-secondary);
+}
+ul.qlinks li a:hover { color: var(--rt-text); border-bottom-color: var(--rt-border-strong); }
+ul.qlinks li a.rt-active { color: var(--rt-accent); border-bottom-color: var(--rt-accent); }
+
+/* ----------------------------------------------- breadcrumb + search bar */
+.menubar {
+  background: transparent;
+  color: var(--rt-muted);
+  font-size: 13px;
+  font-weight: 400;
+  padding: 16px 20px 0;
+  min-height: 0;
+  border: 0;
+}
+.menubar a, .menubar a:link, .menubar a:visited { color: var(--rt-secondary); font-weight: 400; }
+.menubar a:hover { color: var(--rt-accent); }
+.menubar > a:last-of-type { color: var(--rt-text); font-weight: 500; }
+.rt-crumb-sep { color: var(--rt-muted); padding: 0 4px; }
+.searchbox { margin-top: -6px; }
+.searchbox label { font-size: 0; color: transparent; }
+.searchbox label u { display: none; }
+.searchbox input[type=text], .rt-search input[type=text] {
+  box-sizing: border-box;
+  width: 300px;
+  height: 32px;
+  padding: 0 34px 0 32px;
+  font-size: 13px;
+  color: var(--rt-text);
+  background: var(--rt-bg) url('?module=chrome&uri=redesigntheme/icons/search.svg') no-repeat 10px center / 14px 14px;
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius);
+}
+.searchbox input[type=text]::placeholder, .rt-search input[type=text]::placeholder { color: var(--rt-muted); }
+.searchbox input[type=text]:focus, .rt-search input[type=text]:focus {
+  background-color: #fff;
+  border-color: var(--rt-accent);
+  box-shadow: 0 0 0 3px var(--rt-focus);
+  outline: none;
+}
+
+/* ------------------------------------------------------------------- tabs */
+.tabbar { background: transparent; padding: 0; }
+.greynavbar {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rt-border);
+  padding: 0 20px;
+  margin-top: 8px;
+}
+#foldertab {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 20px;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0;
+  font: 400 14px var(--rt-font);
+  white-space: normal;
+}
+#foldertab li { display: block; margin: 0; padding: 0; list-style: none; }
+#foldertab li a, #foldertab li a.std, #foldertab li a.current, #foldertab li a.attn {
+  display: block;
+  padding: 8px 0;
+  margin: 0 0 -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  font-size: 14px;
+  text-decoration: none;
+}
+#foldertab li a.std, #foldertab li a.std:link, #foldertab li a.std:visited { color: var(--rt-secondary); background: transparent; }
+#foldertab li a.std:hover { color: var(--rt-text); background: transparent; border-bottom-color: var(--rt-border-strong); }
+#foldertab li a.current, #foldertab li a.current:link, #foldertab li a.current:visited, #foldertab li a.current:hover {
+  color: var(--rt-text);
+  font-weight: 500;
+  background: transparent;
+  border-bottom-color: var(--rt-accent);
+}
+#foldertab li a.attn, #foldertab li a.attn:link, #foldertab li a.attn:visited { color: var(--rt-warning); background: transparent; }
+#foldertab li a.attn:hover { color: var(--rt-warning); background: transparent; border-bottom-color: #FDE68A; }
+
+/* --------------------------------------------------------------- messages */
+.msgbar { padding: 0 20px; }
+.msgbar:empty { display: none; }
+.msg_error, .msg_success, .msg_warning, .msg_neutral, .msg_200, .msg_300, .msg_500 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 8px 10px 8px 32px;
+  border-radius: var(--rt-radius);
+  border: 1px solid;
+  font-size: 13px;
+  font-weight: 400;
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  background-size: 14px 14px;
+}
+.msg_success, .msg_200 { background-color: #F0FDF4; border-color: #BBF7D0; color: var(--rt-success); background-image: url('?module=chrome&uri=redesigntheme/icons/circle-check.svg'); }
+.msg_warning { background-color: #FEFCE8; border-color: #FDE68A; color: var(--rt-warning); background-image: url('?module=chrome&uri=redesigntheme/icons/triangle-alert.svg'); }
+.msg_error, .msg_500 { background-color: #FEF2F2; border-color: #FECACA; color: var(--rt-error); background-image: url('?module=chrome&uri=redesigntheme/icons/circle-x.svg'); }
+.msg_neutral, .msg_300 { background-color: var(--rt-accent-soft); border-color: #BFDBFE; color: var(--rt-info); background-image: url('?module=chrome&uri=redesigntheme/icons/info.svg'); }
+
+/* ------------------------------------------------------- page + layouts */
+.pagebar { padding: 16px 20px 20px; }
+table.objectview, table.objview { border-collapse: separate; border-spacing: 0; width: 100%; }
+table.objectview > tbody > tr > td, table.objview > tbody > tr > td { padding: 0; vertical-align: top; }
+td.pcleft, td.pcright { width: auto; padding: 0 !important; vertical-align: top; }
+td.pcleft { padding-right: 16px !important; }
+table.objectview > tbody > tr:first-child > td[colspan] { text-align: left !important; padding-bottom: 12px; }
+table.objectview h1 { margin: 0; }
+
+/* ----------------------------------------------------------------- cards */
+.portlet {
+  box-sizing: border-box;
+  background: var(--rt-surface);
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius);
+  box-shadow: none;
+  margin: 0 0 12px;
+  padding: 0 0 4px;
+  overflow: hidden;
+  text-align: left;
+}
+.portlet > h2 {
+  margin: 0 0 4px;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--rt-border);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--rt-text);
+  text-align: left;
+}
+.portlet > h2::first-letter { text-transform: uppercase; }
+.portlet > table, .portlet > form > table, .portlet > div { margin-left: auto; margin-right: auto; }
+.portlet > *:not(h2):not(table):not(form):not(div):not(center) { margin-left: 14px; margin-right: 14px; }
+
+/* summary portlets: label left, value right (two column definition list look) */
+.portlet table th.tdright, .portlet table th.tagchain {
+  width: 34%;
+  padding: 5px 12px 5px 14px;
+  text-align: left;
+  font-weight: 400;
+  color: var(--rt-secondary);
+  vertical-align: top;
+}
+.portlet table td.tdleft, .portlet table td.tagchain { padding: 5px 14px 5px 0; }
+.portlet table th.tdright::after { content: ""; }
+
+/* empty value (only when RackTables renders an empty cell) */
+.widetable td.tdleft:empty::before, .cooltable td.tdleft:empty::before { content: "\2014"; color: var(--rt-muted); }
+.widetable td.l2address:empty::before { content: "\2014"; color: var(--rt-muted); }
+
+/* ---------------------------------------------------------------- tables */
+.widetable, table.cooltable, table.zebra, table.zebra0 {
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 13px;
+  width: 100%;
+}
+.widetable th, table.cooltable th, table.zebra th, table.zebra0 th, th.sticker {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 7px 10px;
+  background: var(--rt-bg);
+  color: var(--rt-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  border-bottom: 1px solid var(--rt-border);
+  white-space: nowrap;
+}
+.portlet .widetable th:first-child, .portlet table.cooltable th:first-child { padding-left: 14px; }
+.widetable td, table.cooltable td, table.zebra td, table.zebra0 td {
+  padding: var(--rt-cell-y) 10px;
+  border-bottom: 1px solid var(--rt-row-line);
+  vertical-align: top;
+}
+.portlet .widetable td:first-child, .portlet table.cooltable td:first-child { padding-left: 14px; }
+.widetable tr:last-child > td, table.cooltable tr:last-child > td { border-bottom: 0; }
+/* no zebra stripes: flat rows with separators and hover */
+.row_even, .row_odd, table.zebra tbody tr, table.zebra0 tbody tr { background-color: transparent; }
+table.zebra tbody tr:nth-child(2n+3):not(.highlight),
+table.zebra tbody tr:nth-child(2n):not(.highlight),
+table.zebra0 tbody tr:nth-child(2n+1):not(.highlight),
+table.zebra0 tbody tr:nth-child(2n):not(.highlight) { background-color: transparent; }
+.widetable tr:hover > td, table.cooltable tr:hover > td, table.zebra tbody tr:hover > td, table.zebra0 tbody tr:hover > td,
+tr:hover > td.row_even, tr:hover > td.row_odd { background-color: var(--rt-hover); }
+.row_even.has_problems, .row_odd.has_problems, tr.has_problems_even, tr.has_problems_odd { background-color: #FEF2F2; }
+.trbusy { background-color: transparent; }
+.trerror, .row_error { background-color: #FEF2F2; }
+.trwarning { background-color: #FEFCE8; }
+.trok { background-color: #F0FDF4; }
+tr.highlight > td, .highlight { background-color: #FEF9C3 !important; }
+/* object names in lists: weight 500 */
+.widetable td.tdleft > a[href*="page=object&"], table.cooltable td > a[href*="page=object&"],
+td.row_even > a[href*="page=object"], td.row_odd > a[href*="page=object"] { font-weight: 500; }
+/* hard borders from border=1 attributes, except the rack diagram */
+table[border="1"]:not(.rack):not(.molecule) { border: 1px solid var(--rt-border); border-collapse: collapse; }
+table[border="1"]:not(.rack):not(.molecule) td, table[border="1"]:not(.rack):not(.molecule) th { border-color: var(--rt-row-line); }
+
+/* numbers / addresses in mono */
+.l2address, .ipaddr, td.tdleft > a[href*="page=ipaddress"], td.tdleft > a[href*="page=ipv4net"],
+td.tdleft > a[href*="page=ipv6net"], .net-usage .title { font-family: var(--rt-mono); font-size: 12.5px; }
+a.interactive-portname { font-family: var(--rt-mono); font-size: 12.5px; color: var(--rt-text); }
+
+/* --------------------------------------------------------- tags as chips */
+.tagchain a, td.tagchain a, .tagchain span, a[class*="etag-"], a[class*="tagcolor-"],
+.slbcell small a[class^="tag-"], .slbcell small a[class*=" tag-"] {
+  display: inline-block;
+  margin: 1px 2px 1px 0;
+  padding: 0 7px;
+  line-height: 20px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--rt-text-2);
+  border: 1px solid var(--rt-border);
+  border-radius: 4px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.tagchain a:hover, a[class*="etag-"]:hover, a[class*="tagcolor-"]:hover { border-color: var(--rt-accent); color: var(--rt-accent); text-decoration: none; }
+/* implicit tags: dashed */
+td.tagchain a:not([class*="etag-"]) { border-style: dashed; border-color: #BFCBDA; }
+.slbcell small { color: var(--rt-muted); }
+
+/* -------------------------------------------------- tag filter / trees */
+div.tagselector, .tagtree { font-size: 13px; }
+td.tagbox { padding: 4px 8px; border-radius: 5px; }
+td.tagbox:hover { background: var(--rt-hover); }
+td.tagbox.selected { background: var(--rt-accent-soft); }
+td.tagbox label { cursor: pointer; }
+.tagtree tr.separator td { border-top: 1px solid var(--rt-border); padding: 0; height: 1px; }
+span.tag-descr, a.tag-descr { color: var(--rt-muted); font-size: 12px; }
+.sparenetwork { color: var(--rt-muted); }
+
+/* ------------------------------------------------------------------ forms */
+input, select, textarea {
+  box-sizing: border-box;
+  font: 400 13px var(--rt-font);
+  color: var(--rt-text);
+  background-color: #fff;
+  border: 1px solid var(--rt-border-strong);
+  border-radius: var(--rt-radius);
+}
+input[type=text], input[type=password], input[type=number], input[type=email], input[type=search], input:not([type]) {
+  height: 32px;
+  padding: 0 10px;
+}
+select { height: 32px; padding: 0 28px 0 10px; }
+select[multiple], select[size]:not([size="1"]) { height: auto; padding: 4px; }
+textarea { padding: 7px 10px; line-height: 1.5; }
+input:hover, select:hover, textarea:hover { border-color: #94A3B8; }
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--rt-accent);
+  box-shadow: 0 0 0 3px var(--rt-focus);
+}
+input:disabled, select:disabled, textarea:disabled, input[readonly] {
+  background: var(--rt-bg);
+  border-color: #E2E8F0;
+  color: var(--rt-muted);
+}
+input[type=checkbox], input[type=radio] {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin: 0 4px 0 0;
+  vertical-align: -3px;
+  accent-color: var(--rt-accent);
+  box-shadow: none;
+}
+input.icon, input[type=image] { height: auto; border: 0; padding: 0; background: transparent; box-shadow: none; }
+.validation-error { border-color: var(--rt-error) !important; }
+input[type=submit], input[type=button], input[type=reset], button {
+  height: 32px;
+  padding: 0 14px;
+  font: 500 13px var(--rt-font);
+  color: #fff;
+  background: var(--rt-accent);
+  border: 1px solid var(--rt-accent);
+  border-radius: var(--rt-radius);
+  cursor: pointer;
+}
+input[type=submit]:hover, input[type=button]:hover, button:hover { background: var(--rt-accent-hover); border-color: var(--rt-accent-hover); }
+input[type=submit]:focus-visible, button:focus-visible { outline: 2px solid var(--rt-text); outline-offset: 2px; box-shadow: none; }
+input[type=reset], input[type=button].secondary { background: #fff; color: var(--rt-text-2); border-color: var(--rt-border-strong); }
+input[type=reset]:hover { background: var(--rt-hover); }
+input[type=submit]:disabled, button:disabled { background: #E2E8F0; border-color: #E2E8F0; color: var(--rt-muted); cursor: default; }
+td.submit { padding-top: 12px; }
+/* property forms: labels left */
+th.sticker { position: static; background: transparent; padding: 7px 16px 7px 14px; font-size: 13px; font-weight: 500; color: var(--rt-text-2); text-align: left; border: 0; white-space: normal; vertical-align: top; }
+td.sticker { padding: 6px 14px 6px 0; }
+
+/* -------------------------------------------------------- comment block */
+div.commentblock {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: 400 13.5px/1.5 var(--rt-font);
+  color: var(--rt-text);
+  white-space: pre-wrap;
+}
+.portlet > div.commentblock { padding: 10px 14px; }
+.dashed { border: 1px dashed var(--rt-border-strong); border-radius: var(--rt-radius); }
+
+/* ----------------------------------------------------- main page tiles */
+/* Layout comes from plugin.php ($indexlayout): rows 1-2 Infrastructure, row 3 Management.
+   Icon (Lucide, pre-colored copy) in ::before, description in ::after. */
+.pagebar > table > tbody > tr > td > div[style*="text-align: center"] { margin: 0 !important; }
+table.mainmenu { position: relative; margin-top: 22px; border-collapse: separate; border-spacing: 8px; table-layout: fixed; }
+table.mainmenu td { padding: 0 !important; vertical-align: top; }
+table.mainmenu h1 { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.3; }
+table.mainmenu h1 a, table.mainmenu h1 a:link, table.mainmenu h1 a:visited {
+  --rt-tile-bg: var(--rt-accent-soft);
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  row-gap: 1px;
+  align-content: center;
+  min-height: 62px;
+  padding: 12px 14px;
+  background: var(--rt-surface);
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius);
+  color: var(--rt-text);
+  text-align: left;
+  text-decoration: none;
+}
+table.mainmenu h1 a:hover { background: var(--rt-hover); border-color: #BFCBDA; color: var(--rt-text); text-decoration: none; }
+table.mainmenu h1 a br, table.mainmenu h1 a img { display: none; }
+table.mainmenu h1 a::before {
+  content: "";
+  grid-row: 1 / 3;
+  grid-column: 1;
+  align-self: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: var(--rt-tile-icon) center / 20px 20px no-repeat, var(--rt-tile-bg);
+}
+table.mainmenu h1 a::after {
+  content: var(--rt-tile-desc, "");
+  grid-row: 2;
+  grid-column: 2;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--rt-secondary);
+}
+table.mainmenu a[href$="page=rackspace"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/blue/server.svg'); --rt-tile-desc: "Locations and racks"; }
+table.mainmenu a[href$="page=depot"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/blue/hard-drive.svg'); --rt-tile-desc: "Devices and equipment"; }
+table.mainmenu a[href$="page=cables"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/blue/cable.svg'); --rt-tile-desc: "Physical connections"; }
+table.mainmenu a[href$="page=ipv4space"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/blue/network.svg'); --rt-tile-desc: "Networks and addresses"; }
+table.mainmenu a[href$="page=ipv6space"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/blue/globe.svg'); --rt-tile-desc: "Networks and addresses"; }
+table.mainmenu a[href$="page=8021q"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/blue/layers.svg'); --rt-tile-desc: "VLAN management"; }
+table.mainmenu a[href$="page=ipv4slb"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/blue/split.svg'); --rt-tile-desc: "Load balancing"; }
+table.mainmenu a[href$="page=virtual"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/blue/boxes.svg'); --rt-tile-desc: "Virtual machines and clusters"; }
+table.mainmenu a[href$="page=files"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/folder.svg'); --rt-tile-desc: "Attachments"; --rt-tile-bg: var(--rt-hover); }
+table.mainmenu a[href$="page=reports"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/clipboard-list.svg'); --rt-tile-desc: "Statistics and summaries"; --rt-tile-bg: var(--rt-hover); }
+table.mainmenu a[href$="page=objectlog"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/scroll-text.svg'); --rt-tile-desc: "Change history"; --rt-tile-bg: var(--rt-hover); }
+table.mainmenu a[href$="page=config"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/settings.svg'); --rt-tile-desc: "System settings"; --rt-tile-bg: var(--rt-hover); }
+table.mainmenu::before {
+  content: "INFRASTRUCTURE";
+  position: absolute;
+  top: -18px;
+  left: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  color: var(--rt-secondary);
+}
+table.mainmenu tr:last-child td { padding-top: 36px !important; position: relative; }
+table.mainmenu tr:last-child td:first-child::before {
+  content: "MANAGEMENT";
+  position: absolute;
+  top: 8px;
+  left: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  color: var(--rt-secondary);
+}
+
+/* -------------------------------------------------------- rack diagram */
+.rackspace h2 { font: 600 18px var(--rt-font); margin: 0; }
+.rackspace h3 { font: 600 15px var(--rt-font); }
+.rackspace a, .rackspace a:link, .rackspace a:visited { color: var(--rt-accent); font-weight: 500; }
+table.rack {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  font: 500 12px var(--rt-font);
+  border: 0;
+  background: transparent;
+}
+table.rack th {
+  padding: 0 8px 6px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--rt-secondary);
+  border: 0;
+  background: transparent;
+}
+table.rack > tbody > tr > th:first-child, th.rack {
+  width: 32px;
+  padding: 0 8px 0 0;
+  font: 400 11.5px var(--rt-mono);
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: right;
+  color: var(--rt-secondary);
+}
+table.rack th a { color: var(--rt-secondary); font-weight: 400; }
+table.rack td.atom {
+  --rt-atom-bg: var(--rt-k-other-bg);
+  --rt-atom-bd: var(--rt-k-other-bd);
+  --rt-atom-fg: var(--rt-k-other-fg);
+  height: 19px;
+  padding: 0 8px;
+  text-align: center;
+  border: 0;
+  box-shadow: inset 0 0 0 1px #fff, inset 0 -1px 0 var(--rt-row-line);
+  background: #fff;
+}
+table.rack td.atom.state_T, table.rack td.atom.state_Tw {
+  background: var(--rt-atom-bg) !important;
+  background-image: none !important;
+  box-shadow: inset 0 0 0 1px #fff, inset 0 0 0 2px var(--rt-atom-bd);
+  border-radius: 4px;
+  color: var(--rt-atom-fg);
+}
+table.rack td.atom.state_T a, table.rack td.atom.state_Tw a {
+  color: var(--rt-atom-fg);
+  font-size: 12px;
+  font-weight: 500;
+}
+table.rack td.atom.state_T:hover { box-shadow: inset 0 0 0 1px #fff, inset 0 0 0 3px var(--rt-accent); }
+/* selected object (highlighted from the object page) */
+table.rack td.atom.state_Th, table.rack td.atom.state_Thw {
+  background: var(--rt-accent) !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 4px;
+  box-shadow: 0 0 0 2px var(--rt-focus), inset 0 0 0 1px var(--rt-accent-hover);
+}
+table.rack td.atom.state_Th a, table.rack td.atom.state_Thw a { color: #fff; font-weight: 600; }
+table.rack td.atom.state_F { background: #fff; }
+table.rack td.atom.state_A { background: repeating-linear-gradient(135deg, #fff 0 3px, #94A3B8 3px 4px); }
+table.rack td.atom.state_U { background: repeating-linear-gradient(45deg, #FEE2E2 0 3px, var(--rt-error) 3px 4px); }
+table.rack td.atom.state_Tw, table.rack td.atom.state_Thw { outline: 2px solid var(--rt-error); outline-offset: -2px; }
+.rack a, .rack a:link, .rack a:visited { text-decoration: none; }
+.rack a:hover { text-decoration: underline; }
+/* rack frame */
+table.rack { border: 1px solid var(--rt-border-strong); border-radius: 4px; padding: 4px; background: #fff; }
+/* rack editing grid (Rackspace tab) */
+td.atom.ui-selecting { background: var(--rt-focus) !important; }
+
+/* rack legend: added by enhance.js below the diagram */
+.rt-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; padding: 12px 14px; font-size: 12.5px; color: var(--rt-text-2); }
+.rt-legend span { display: flex; align-items: center; gap: 8px; }
+.rt-legend i { flex: none; width: 16px; height: 12px; border-radius: 2px; border: 1px solid; }
+
+/* progress bars rendered as images: keep crisp */
+img[src*="module=progressbar"] { border-radius: 4px; image-rendering: auto; }
+
+/* ----------------------------------------------------------- IPAM nets */
+.net-usage { font-size: 12.5px; }
+.net-usage .title { color: var(--rt-text-2); }
+td.tdleft .rsvtext { font-family: var(--rt-font); font-size: 12.5px; color: var(--rt-text-2); }
+.port_connected_none { color: var(--rt-muted); }
+
+/* ---------------------------------------------------- slb/vs/file cells */
+table.slbcell, table.vscell { border: 0; border-collapse: collapse; }
+table.slbcell td, table.vscell td { padding: 1px 4px; border: 0; }
+a.img-link img, .portlet img[src*="module=image"] { border-radius: 4px; border: 1px solid var(--rt-border); }
+
+/* ------------------------------------------------------------- misc */
+.description { color: var(--rt-muted); }
+.logentry { font-family: var(--rt-font); }
+div.greeting { color: var(--rt-muted); }
+.edit-btn { opacity: .7; }
+.edit-btn:hover { opacity: 1; }
+.dragon { color: var(--rt-muted); }
+.popup-box { border: 1px solid var(--rt-border); border-radius: var(--rt-radius); box-shadow: 0 8px 24px rgba(16,24,40,.12); background: #fff; }
+.ui-autocomplete { font-family: var(--rt-font) !important; }
+
+/* footer (added by enhance.js) */
+.rt-footer { padding: 10px 20px; border-top: 1px solid var(--rt-border); font: 400 12px var(--rt-mono); color: var(--rt-muted); }
+.rt-footer a { color: var(--rt-muted); }
+
+/* ------------------------------------- type-to-filter (select-filter.js) */
+input.rt-select-filter {
+  display: block;
+  min-width: 220px;
+  max-width: 100%;
+  height: 30px;
+  margin: 0 0 4px;
+}
+input.rt-select-filter.rt-no-match { border-color: var(--rt-error); box-shadow: 0 0 0 3px #FECACA; }
+
+/* --------------------------------------------- enhance.js: search slot */
+.rt-search { position: relative; margin: 0 4px 0 auto; }
+.rt-search form { margin: 0; }
+.rt-search kbd {
+  position: absolute;
+  right: 8px;
+  top: 7px;
+  font: 500 11px/16px var(--rt-mono);
+  padding: 0 5px;
+  color: var(--rt-secondary);
+  background: #fff;
+  border: 1px solid var(--rt-border);
+  border-radius: 4px;
+  pointer-events: none;
+}
+.rt-search input:focus + kbd, .rt-search input:not(:placeholder-shown) + kbd { display: none; }
+.mainheader .rt-search { order: 98; }
+.mainheader .rt-search ~ div.greeting, .mainheader div.greeting:has(~ .rt-search) { margin-left: 12px; }
+
+/* density switch + copy buttons (enhance.js) */
+.rt-tools { display: flex; align-items: center; gap: 8px; justify-content: flex-end; padding: 0 0 8px; }
+.rt-seg { display: inline-flex; border: 1px solid var(--rt-border); border-radius: var(--rt-radius); overflow: hidden; background: #fff; }
+.rt-seg button {
+  height: auto;
+  padding: 4px 10px;
+  border: 0;
+  border-right: 1px solid var(--rt-border);
+  border-radius: 0;
+  background: #fff;
+  color: var(--rt-secondary);
+  font: 500 12px var(--rt-font);
+}
+.rt-seg button:last-child { border-right: 0; }
+.rt-seg button:hover { background: var(--rt-hover); color: var(--rt-text); }
+.rt-seg button[aria-pressed=true] { background: var(--rt-accent-soft); color: var(--rt-accent-hover); }
+html.rt-density-default { --rt-cell-y: 8px; }
+html.rt-density-comfortable { --rt-cell-y: 12px; }
+.rt-copy {
+  height: 18px;
+  width: 18px;
+  margin-left: 4px;
+  padding: 0;
+  vertical-align: -4px;
+  border: 0;
+  background: transparent;
+  opacity: 0;
+  cursor: pointer;
+}
+.rt-copy::before {
+  content: "";
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin: 2px;
+  background: var(--rt-secondary);
+  -webkit-mask: url('?module=chrome&uri=redesigntheme/icons/copy.svg') center / contain no-repeat;
+  mask: url('?module=chrome&uri=redesigntheme/icons/copy.svg') center / contain no-repeat;
+}
+.rt-copy.rt-done::before {
+  background: var(--rt-success);
+  -webkit-mask-image: url('?module=chrome&uri=redesigntheme/icons/check.svg');
+  mask-image: url('?module=chrome&uri=redesigntheme/icons/check.svg');
+}
+.rt-copy:hover { background: transparent; }
+td:hover > .rt-copy, .rt-copy:focus-visible { opacity: 1; }
+
+@media print {
+  .mainheader, .searchbox, .tabbar, .rt-tools, .rt-copy { display: none !important; }
+  .portlet { border-color: #999; }
+}
+
+/* ------------------------------------------------------ fixes / details */
+th.tagchain, td.tagchain { background: transparent !important; }
+table.cooltable { border: 0; margin: 0; }
+.portlet > h2 + br, .portlet > h2 + br + br { display: none; }
+/* object lists: neutral rows, tags shown as chips instead of row tint */
+table tr[class*="cellcolor-"], table td[class*="cellcolor-"]:not(.atom), table.slbcell[class*="cellcolor-"] { background-image: none !important; }
+table.cooltable td > a > strong, .widetable td > a > strong { font-weight: 500; }
+small:has(> a[class*="tag-"]) { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; font-size: 0; }
+small:has(> a[class*="tag-"]) > a { margin: 0; font-size: 11.5px; line-height: 18px; }
+td > a + br:has(+ small) { display: none; }
+td:has(> a + br + small) > a { display: block; }
+
+/* rack page: diagram first (~62 %), summary and files on the right */
+html.rt-page-rack table.objectview > tbody > tr:has(> td.pcright) { display: flex; flex-direction: row-reverse; gap: 16px; }
+html.rt-page-rack table.objectview > tbody > tr > td.pcright { flex: 1.65 1 0; min-width: 0; }
+html.rt-page-rack table.objectview > tbody > tr > td.pcleft { flex: 1 1 0; min-width: 0; padding-right: 0 !important; }
+
+.portlet > h2:empty { display: none; }
+.rackspace .portlet > h2, .portlet > h2 { font: 600 14px var(--rt-font); }
+/* lists that RackTables renders outside a portlet (Rackspace browse): card look */
+td.pcleft > table.cooltable, .pagebar > table.cooltable {
+  background: var(--rt-surface);
+  border: 1px solid var(--rt-border);
+  border-collapse: separate;
+  border-radius: var(--rt-radius);
+  overflow: hidden;
+}
+td.pcleft > table.cooltable th { border-radius: 0; }
+.rackspace img, img[src*="module=image&img=minirack"] { border: 0; border-radius: 3px; }
+
+/* IPv4/IPv6 network: allocated addresses blue 500, free ones secondary (AA contrast) */
+td > a[href*="page=ipaddress"] { font-family: var(--rt-mono); font-size: 12.5px; }
+tr:not(.trbusy) > td > a[href*="page=ipaddress"] { color: var(--rt-secondary); font-weight: 400; }
+tr.trbusy > td > a[href*="page=ipaddress"] { color: var(--rt-accent); font-weight: 500; }
+a.hover-history.underline, span.hover-history.underline { text-decoration: none; border-bottom: 1px dotted #94A3B8; }
+td > a[href*="page=ipaddress"].hover-history { border-bottom: 0; }
+
+/* progress bars (enhance.js replaces RackTables' bitmap bars) */
+.rt-bar { display: inline-flex; vertical-align: middle; width: 160px; height: 8px; border-radius: 4px; background: #E2E8F0; overflow: hidden; }
+.rt-bar > i { display: block; background: var(--rt-accent); }
+.rt-bar > i.rt-bar-rsv { background: var(--rt-secondary); }
+.net-usage .rt-bar { width: 120px; margin-right: 8px; }
+.rt-bar-label { margin-left: 10px; font: 400 12.5px var(--rt-mono); color: var(--rt-text-2); }
+
+/* Configuration: link list shown as tiles (same look as the main page) */
+html.rt-page-config .pagebar > ul {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+html.rt-page-config .pagebar > ul > li > a {
+  --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/settings.svg');
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 62px;
+  padding: 12px 14px;
+  background: var(--rt-surface);
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius);
+  color: var(--rt-text);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+html.rt-page-config .pagebar > ul > li > a:hover { background: var(--rt-hover); border-color: #BFCBDA; }
+html.rt-page-config .pagebar > ul > li > a::before {
+  content: "";
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: var(--rt-tile-icon) center / 20px 20px no-repeat, var(--rt-hover);
+}
+html.rt-page-config .pagebar > ul > li > a[href$="page=userlist"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/users.svg'); }
+html.rt-page-config .pagebar > ul > li > a[href$="page=perms"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/shield.svg'); }
+html.rt-page-config .pagebar > ul > li > a[href$="page=parentmap"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/box.svg'); }
+html.rt-page-config .pagebar > ul > li > a[href$="page=portmap"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/link.svg'); }
+html.rt-page-config .pagebar > ul > li > a[href$="page=portifcompat"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/ethernet-port.svg'); }
+html.rt-page-config .pagebar > ul > li > a[href$="page=portoifs"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/plug.svg'); }
+html.rt-page-config .pagebar > ul > li > a[href$="page=attrs"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/list.svg'); }
+html.rt-page-config .pagebar > ul > li > a[href$="page=dict"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/book-open.svg'); }
+html.rt-page-config .pagebar > ul > li > a[href$="page=ui"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/sliders-horizontal.svg'); }
+html.rt-page-config .pagebar > ul > li > a[href$="page=tagtree"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/tags.svg'); }
+html.rt-page-config .pagebar > ul > li > a[href$="page=myaccount"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/square-user.svg'); }
+html.rt-page-config .pagebar > ul > li > a[href$="page=cableconf"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/cable.svg'); }
+html.rt-page-config .pagebar > ul > li > a[href$="page=plugins"] { --rt-tile-icon: url('?module=chrome&uri=redesigntheme/icons/slate/puzzle.svg'); }
+
+/* tag editor (tagit) on Properties tab */
+ul.tagit, .tagit-vertical { background: transparent !important; border: 0 !important; }
+ul.tagit li.tagit-choice { border: 1px solid var(--rt-border); border-radius: 4px; font-size: 12px; }
+/* hide ", " text between tag chips in summaries */
+td.tagchain { font-size: 0; }
+td.tagchain > a { font-size: 12px; margin: 1px 4px 1px 0; }
