@@ -81,40 +81,25 @@ function redesigntheme_type_group ($objtype_id, $type_name)
 	return 'other';
 }
 
-// Adds one CSS rule per mounted object on rack-related pages, so the rack
+// Adds one CSS rule per mounted object on rack and object pages, so the rack
 // diagram can color blocks by object type. Pure CSS (:has), no JS needed.
 function redesigntheme_rack_type_css ()
 {
+	// Only for HTML pages that render a rack diagram (rack view, object view).
+	// Plugins run before RackTables checks page permissions, so keep this cheap
+	// and limited to the interface module; the query only reads object types.
+	$module = isset ($_REQUEST['module']) ? $_REQUEST['module'] : 'interface';
 	$page = isset ($_REQUEST['page']) ? $_REQUEST['page'] : '';
+	if ($module != 'interface')
+		return;
 	$rack_ids = array();
 	if ($page == 'rack' && isset ($_REQUEST['rack_id']))
 		$rack_ids[] = intval ($_REQUEST['rack_id']);
 	elseif ($page == 'object' && isset ($_REQUEST['object_id']))
-	{
-		$result = usePreparedSelectBlade
-		(
-			'SELECT DISTINCT rack_id FROM RackSpace WHERE object_id = ? ' .
-			'UNION SELECT DISTINCT rs.rack_id FROM RackSpace rs ' .
-			'JOIN EntityLink el ON el.child_entity_id = rs.object_id ' .
-			"AND el.child_entity_type = 'object' AND el.parent_entity_type = 'object' " .
-			'WHERE el.parent_entity_id = ?',
-			array (intval ($_REQUEST['object_id']), intval ($_REQUEST['object_id']))
-		);
-		foreach ($result->fetchAll (PDO::FETCH_COLUMN, 0) as $id)
+		// same racks RackTables shows on the object page (own, parent's, Zero-U)
+		foreach (getResidentRackIDs (intval ($_REQUEST['object_id'])) as $id)
 			$rack_ids[] = intval ($id);
-	}
-	elseif ($page == 'row' && isset ($_REQUEST['row_id']))
-	{
-		$result = usePreparedSelectBlade
-		(
-			"SELECT child_entity_id FROM EntityLink WHERE parent_entity_type = 'row' " .
-			"AND child_entity_type = 'rack' AND parent_entity_id = ?",
-			array (intval ($_REQUEST['row_id']))
-		);
-		foreach ($result->fetchAll (PDO::FETCH_COLUMN, 0) as $id)
-			$rack_ids[] = intval ($id);
-	}
-	$rack_ids = array_slice (array_unique ($rack_ids), 0, 50);
+	$rack_ids = array_values (array_unique ($rack_ids));
 	if (! count ($rack_ids))
 		return;
 	$result = usePreparedSelectBlade
@@ -140,8 +125,8 @@ function redesigntheme_rack_type_css ()
 	{
 		$sel = array();
 		foreach ($ids as $id)
-			$sel[] = "table.rack td.atom.state_T:has(> div > a[href\$=\"object_id=${id}\"])";
-		$css .= implode (",\n", $sel) . " { --rt-atom-bg: var(--rt-k-${g}-bg); --rt-atom-bd: var(--rt-k-${g}-bd); --rt-atom-fg: var(--rt-k-${g}-fg); }\n";
+			$sel[] = "table.rack td.atom.state_T:has(> div > a[href\$=\"object_id={$id}\"])";
+		$css .= implode (",\n", $sel) . " { --rt-atom-bg: var(--rt-k-{$g}-bg); --rt-atom-bd: var(--rt-k-{$g}-bd); --rt-atom-fg: var(--rt-k-{$g}-fg); }\n";
 	}
 	addCSSText ($css);
 }

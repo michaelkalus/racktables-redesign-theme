@@ -211,10 +211,14 @@
 		qsa ('img[src*="module=progressbar"]').forEach (function (img) {
 			var src = img.getAttribute ('src') || '';
 			// progressbar: done=N; progressbar4 (networks): px1 used, px2 free, px3 reserved
+			// progressbar: done=N (percent). progressbar4 (networks): pixel widths relative to
+			// the image width: px1 = own used, px2 = own free, px3 = used in subnets.
 			var parts = [];
-			if (src.indexOf ('module=progressbar4') >= 0)
-				parts = [[parseInt (param (src, 'px1'), 10), ''], [parseInt (param (src, 'px3'), 10), 'rt-bar-rsv']];
-			else
+			if (src.indexOf ('module=progressbar4') >= 0) {
+				var w = parseInt (img.getAttribute ('width'), 10) || 100;
+				var pc = function (n) { return parseInt (param (src, n), 10) * 100 / w; };
+				parts = [[pc ('px1'), ''], [pc ('px2'), 'rt-bar-gap'], [pc ('px3'), 'rt-bar-rsv']];
+			} else
 				parts = [[parseInt (param (src, 'done'), 10), '']];
 			if (isNaN (parts[0][0])) return;
 			var title = img.getAttribute ('title') || (parts[0][0] + '%');
