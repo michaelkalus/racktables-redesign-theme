@@ -803,3 +803,87 @@ ul.tagit li.tagit-choice { border: 1px solid var(--rt-border); border-radius: 4p
 /* hide ", " text between tag chips in summaries */
 td.tagchain { font-size: 0; }
 td.tagchain > a { font-size: 12px; margin: 1px 4px 1px 0; }
+
+/* ------------------------------------------- Rackspace: racks in columns */
+/* Each rack sits in its own cell whose width follows the rack name, so racks of
+   different rows drift sideways. Fixed cell width keeps them in columns. */
+table.cooltable th > table td:has(> a > img[src*="img=minirack"]) {
+  width: 88px;
+  min-width: 88px;
+  max-width: 88px;
+  padding: 0 4px 4px;
+  vertical-align: bottom;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  line-height: 1.25;
+}
+table.cooltable th > table:has(img[src*="img=minirack"]) { border-collapse: separate; border-spacing: 6px 0; margin-left: -6px; }
+
+/* ------------------------------------------------------------- mobile */
+@media (max-width: 768px) {
+  body { font-size: 14px; }
+  .pagebar { padding: 12px; }
+  .menubar { padding: 12px 12px 0; }
+  .msgbar { padding: 0 12px; }
+
+  /* header: name + user on the first line, sections (and search) below */
+  .mainheader { flex-wrap: wrap; height: auto; min-height: 52px; padding: 8px 12px; row-gap: 4px; }
+  .mainheader > a[href*="racktables.org"] { display: none; }
+  ul.qlinks { order: 100; flex: 1 0 100%; margin: 0; overflow-x: auto; scrollbar-width: none; }
+  ul.qlinks li a, ul.qlinks li a:link, ul.qlinks li a:visited { padding: 8px 10px; white-space: nowrap; }
+  ul.qlinks li:first-child a { padding-left: 0; }
+  .mainheader .rt-search { order: 101; flex: 1 0 100%; margin: 4px 0; }
+  .mainheader .rt-search kbd { display: none; }
+  .searchbox input[type=text], .rt-search input[type=text] { width: 100%; }
+  .menubar .searchbox { float: none !important; margin: 0 0 8px; }
+  .mainheader div.greeting { font-size: 12px; }
+
+  /* tabs: one scrollable line */
+  .greynavbar { padding: 0 12px; overflow-x: auto; scrollbar-width: none; }
+  #foldertab { flex-wrap: nowrap; gap: 0 16px; }
+  #foldertab li a { white-space: nowrap; }
+
+  /* two column page layouts stack */
+  table.objectview, table.objview,
+  table.objectview > tbody, table.objview > tbody,
+  table.objectview > tbody > tr, table.objview > tbody > tr,
+  table.objectview > tbody > tr > td, table.objview > tbody > tr > td { display: block; width: auto !important; }
+  td.pcleft { padding-right: 0 !important; }
+  html.rt-page-rack table.objectview > tbody > tr:has(> td.pcright) { display: flex; flex-direction: column-reverse; gap: 0; }
+
+  /* cards and wide tables scroll sideways instead of overflowing the page */
+  .portlet { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .portlet > table, td.pcleft > table.cooltable { min-width: 0; }
+  td.pcleft > table.cooltable, .pagebar > table.cooltable { display: block; overflow-x: auto; }
+  .widetable th, table.cooltable th, table.zebra th { position: static; }
+  .portlet .widetable td, .portlet table.zebra td { white-space: nowrap; }
+  .portlet table.zebra td.tdleft a { white-space: normal; }
+  .portlet table th.tdright, .portlet table th.tagchain { width: 40%; }
+
+  /* main page and configuration tiles: one column */
+  table.mainmenu, table.mainmenu > tbody { display: block; margin-top: 22px; }
+  table.mainmenu > tbody > tr { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 8px; }
+  table.mainmenu > tbody > tr > td { display: block; }
+  table.mainmenu > tbody > tr > td:empty, table.mainmenu > tbody > tr > td:not(:has(a)) { display: none; }
+  table.mainmenu::before { top: -20px; left: 0; }
+  table.mainmenu tr:last-child td { padding-top: 0 !important; }
+  table.mainmenu tr:last-child { margin-top: 30px; position: relative; }
+  table.mainmenu tr:last-child td:first-child::before { top: -22px; }
+  html.rt-page-config .pagebar > ul { grid-template-columns: 1fr; }
+
+  /* forms: label above control, 16 px text (no iOS zoom on focus) */
+  input, select, textarea { font-size: 16px; max-width: 100%; }
+  input[type=text], input[type=password], input:not([type]), select { height: 40px; }
+  input[type=submit], button { height: 40px; }
+  th.sticker, td.sticker, .portlet table th.tdright + td.tdleft { display: block; width: auto; text-align: left; }
+  th.sticker { padding-bottom: 0; }
+  input.rt-select-filter { min-width: 0; width: 100% !important; }
+
+  /* rack diagram: narrower name cells, smaller text */
+  table.rack { font-size: 11px; }
+  table.rack td.atom.state_T a, table.rack td.atom.state_Th a { font-size: 11px; }
+  .rt-legend { grid-template-columns: 1fr; }
+  .rt-tools { justify-content: flex-start; overflow-x: auto; }
+}

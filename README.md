@@ -23,6 +23,9 @@ lighter *Refresh Theme* (`refreshtheme`). Enable only one of the two at a time.
   `plugin.php` emits one CSS rule per mounted object (`:has()` selector); the type group
   comes from stock dictionary IDs, site specific types are matched by name
   (ODF / optic -> optical, ...). Adjust `redesigntheme_type_group()` if needed.
+- Rackspace: racks in fixed width columns (long rack names wrap instead of shifting racks).
+- Mobile layout below 768 px (the plugin adds the viewport meta RackTables lacks): stacked
+  columns, scrollable tabs and wide tables, one column tiles, 16 px form controls.
 - IPv4/IPv6 network: allocated addresses blue, free addresses in secondary gray (AA contrast).
 
 **Enhanced (optional, `js/enhance.js`)**

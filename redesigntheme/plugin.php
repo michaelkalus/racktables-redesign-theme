@@ -13,7 +13,7 @@ function plugin_redesigntheme_info ()
 	(
 		'name' => 'redesigntheme',
 		'longname' => 'Redesign Theme',
-		'version' => '2.0.0',
+		'version' => '2.1.0',
 		'home_url' => '',
 	);
 }
@@ -22,6 +22,8 @@ function plugin_redesigntheme_init ()
 {
 	// Served by RackTables itself (?module=chrome&uri=...) from $local_staticdir,
 	// which defaults to the plugins/ directory.
+	// RackTables sends no viewport meta; without it phones render a zoomed out 980 px page.
+	addPageHeader ('<meta name="viewport" content="width=device-width, initial-scale=1">', 'default');
 	addCSSInternal ('redesigntheme/css/fonts.css');
 	addCSSInternal ('redesigntheme/css/theme.css');
 	addJSInternal ('redesigntheme/js/select-filter.js');
