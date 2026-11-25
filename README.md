@@ -4,6 +4,20 @@ A redesign of the [RackTables](https://www.racktables.org/) interface, packaged 
 (`redesigntheme`). It does not modify RackTables core files. It is the successor of the
 lighter *Refresh Theme* (`refreshtheme`). Enable only one of the two at a time.
 
+## Screenshots
+
+Taken on a demo instance with generated data (no real records).
+
+| | |
+|---|---|
+| **Main page**<br>![Main page](screenshots/main-page.png) | **Objects**<br>![Objects](screenshots/objects.png) |
+| **Object**<br>![Object](screenshots/object.png) | **Rack**<br>![Rack](screenshots/rack.png) |
+| **Rackspace**<br>![Rackspace](screenshots/rackspace.png) | **IPv4 network**<br>![IPv4 network](screenshots/ipv4-network.png) |
+
+**Mobile**
+
+<img src="screenshots/mobile-main-page.png" width="260" alt="Mobile main page"> <img src="screenshots/mobile-object.png" width="260" alt="Mobile object">
+
 ## Layers
 
 **Core (CSS only, works without JavaScript)**
