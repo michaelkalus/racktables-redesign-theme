@@ -887,3 +887,37 @@ table.cooltable th > table:has(img[src*="img=minirack"]) { border-collapse: sepa
   .rt-legend { grid-template-columns: 1fr; }
   .rt-tools { justify-content: flex-start; overflow-x: auto; }
 }
+
+/* ------------------------------------------------------------ Reports */
+/* RackTables renders all report sections as one centered table (h3 headings,
+   label: value rows, nested tables for top lists). Show it as a left aligned
+   card; wide nested tables scroll inside it instead of widening the page. */
+.pagebar > table[align=center]:has(h3) {
+  display: block;
+  box-sizing: border-box;
+  max-width: 100%;
+  width: fit-content;
+  min-width: min(560px, 100%);
+  margin: 0 !important;
+  padding: 4px 0 8px;
+  overflow-x: auto;
+  background: var(--rt-surface);
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius);
+  border-collapse: separate;
+}
+.pagebar > table[align=center]:has(h3) > tbody > tr > th[colspan] { text-align: left; padding: 10px 14px 4px; }
+.pagebar > table[align=center]:has(h3) h3 { margin: 0; font-size: 14px; font-weight: 600; }
+.pagebar > table[align=center]:has(h3) > tbody > tr > td.tdright { text-align: left; color: var(--rt-secondary); padding: 4px 16px 4px 14px; border-bottom: 1px solid var(--rt-row-line); }
+.pagebar > table[align=center]:has(h3) > tbody > tr > td.tdleft { font-family: var(--rt-mono); font-size: 12.5px; padding: 4px 14px 4px 0; border-bottom: 1px solid var(--rt-row-line); }
+.pagebar > table[align=center]:has(h3) > tbody > tr > td[colspan] { padding: 4px 14px; }
+.pagebar > table[align=center]:has(h3) hr { margin: 6px 0 0; }
+@media (max-width: 768px) {
+  .pagebar > table[align=center]:has(h3) { width: 100%; min-width: 0; overflow-x: hidden; }
+  .pagebar > table[align=center]:has(h3) > tbody { display: block; }
+  .pagebar > table[align=center]:has(h3) > tbody > tr { display: flex; align-items: baseline; gap: 12px; }
+  .pagebar > table[align=center]:has(h3) > tbody > tr > td.tdright { flex: 1 1 auto; white-space: normal; }
+  .pagebar > table[align=center]:has(h3) > tbody > tr > td.tdleft { flex: 0 0 auto; text-align: right; }
+  .pagebar > table[align=center]:has(h3) > tbody > tr > th[colspan],
+  .pagebar > table[align=center]:has(h3) > tbody > tr > td[colspan] { display: block; flex: 1 1 100%; min-width: 0; overflow-x: auto; }
+}
