@@ -13,7 +13,7 @@ function plugin_redesigntheme_info ()
 	(
 		'name' => 'redesigntheme',
 		'longname' => 'Redesign Theme',
-		'version' => '2.1.1',
+		'version' => '2.1.2',
 		'home_url' => '',
 	);
 }

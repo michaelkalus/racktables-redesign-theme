@@ -274,6 +274,9 @@ table.objectview h1 { margin: 0; }
   vertical-align: top;
 }
 .portlet table td.tdleft, .portlet table td.tagchain { padding: 5px 14px 5px 0; }
+/* list tables keep the density switch (rule above is for key/value summaries) */
+.portlet .widetable td.tdleft, .portlet table.cooltable td.tdleft, .portlet table.zebra td.tdleft,
+.portlet .widetable td.tagchain, .portlet table.zebra td.tagchain { padding-top: var(--rt-cell-y); padding-bottom: var(--rt-cell-y); }
 .portlet table th.tdright::after { content: ""; }
 
 /* empty value (only when RackTables renders an empty cell) */
